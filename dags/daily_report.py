@@ -19,4 +19,34 @@ def daily_report():
         params={ "n_bookings": 5 }
     )
 
+    _report_data = SQLExecuteQueryOperator(
+        task_id="generate_report",
+        conn_id=_DUCKDB_CONN_ID,
+        sql="report.sql",
+        parameters={"reportDate": "{{ ds }}"}
+    )
+
+    _validate_report = SQLColumnCheckOperator(
+        task_id="validate_report",
+        conn_id=_DUCKDB_CONN_ID,
+        table="daily_planet_report",
+        column_mapping={
+            "planet_name": {
+                "null_check":     {"equal_to": 0},
+                "distinct_check": {"geq_to": 3},
+            },
+            "total_passengers": {
+                "null_check":     {"equal_to": 0},
+                "min":            {"geq_to": 1},
+            }
+        },
+        outlets=Asset("daily_report")
+    )
+
+    chain(
+        _ingest_data,
+        _report_data,
+        _validate_report
+    )
+
 daily_report()
