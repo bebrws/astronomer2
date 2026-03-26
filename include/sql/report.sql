@@ -35,7 +35,7 @@ SELECT
     SUM(gross_fare_usd) AS total_gross_fare_usd,
     SUM(discount_usd) AS total_discounts_usd,
     SUM(net_fare_usd) AS total_net_fare_usd,
-    -- TODO: add total_paid_usd
+    SUM(paid_usd) AS total_paid_usd
 FROM bookings
 GROUP BY report_date, planet_name
 ON CONFLICT (report_date, planet_name) DO UPDATE SET
@@ -45,5 +45,4 @@ ON CONFLICT (report_date, planet_name) DO UPDATE SET
     total_gross_fare_usd = EXCLUDED.total_gross_fare_usd,
     total_discounts_usd = EXCLUDED.total_discounts_usd,
     total_net_fare_usd = EXCLUDED.total_net_fare_usd
-    -- TODO: add total_paid_usd
-    ;
+    total_paid_usd = EXCLUDED.total_paid_usd;
