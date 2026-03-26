@@ -44,5 +44,5 @@ ON CONFLICT (report_date, planet_name) DO UPDATE SET
     completed_trips = EXCLUDED.completed_trips,
     total_gross_fare_usd = EXCLUDED.total_gross_fare_usd,
     total_discounts_usd = EXCLUDED.total_discounts_usd,
-    total_net_fare_usd = EXCLUDED.total_net_fare_usd
+    total_net_fare_usd = EXCLUDED.total_net_fare_usd,
     total_paid_usd = EXCLUDED.total_paid_usd;
